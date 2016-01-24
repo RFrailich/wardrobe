@@ -122,7 +122,34 @@
 			$("#wardrobe-inner").append("<div class='item active clothing-set'>" +
 											"<div id='items-set0' class='row'> </div>" +  
 										"</div>");
-			PopulateWardrobe();
+			var ids = Object.keys(wardrobe);
+
+			if (ids.length == 0) {
+				$('#items-set0').append(
+						"<div class='col-sm-3 clothing-item'>" +
+							"<div class='thumbnail'>" +
+		                        "<img src='C:\\Users\\MarinaT\\Documents\\uoftHacks2016\\placeHolder.jpg'>" +
+	                        "</div>" +
+	                    "</div>" +
+	                    "<div class='col-sm-3 clothing-item'>" +
+	                        "<div class='thumbnail'>" +
+	                           	"<img src='C:\\Users\\MarinaT\\Documents\\uoftHacks2016\\placeHolder.jpg'>" +
+	                        "</div>" +
+	                    "</div>" +
+	                    "<div class='col-sm-3 clothing-item'>" +
+	                    	"<div class='thumbnail'>" +
+	                    		"<img src='C:\\Users\\MarinaT\\Documents\\uoftHacks2016\\placeHolder.jpg'>" +
+	                    	"</div>" +
+	                    "</div>" +
+	                    "<div class='col-sm-3 clothing-item'>" +
+	                    	"<div class='thumbnail'>" +
+	                    		"<img src='C:\\Users\\MarinaT\\Documents\\uoftHacks2016\\placeHolder.jpg'>" +
+	                    	"</div>" +
+	                    "</div>");
+			}
+			else {
+				PopulateWardrobe();
+			}
 		}	
 
 		
@@ -137,9 +164,9 @@
 
 			PopulateWardrobe();
 
-			$(".delete-item").click(function(){
+			$("#wardrobe-inner").on("click", ".delete-item", function(){
 				var id = this.id.replace("item", "");
-				DeleteFromWardrobe(id);
+				DeleteFromWardrobe(id);				
 			});	
 
 
