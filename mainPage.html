@@ -1,0 +1,120 @@
+<html>
+	
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+		<!-- Bootstrap -->
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		
+		<link rel="stylesheet" type="text/css" href="main.css">
+
+
+	</head>
+
+	<body>
+		<!-- the navigation bar -->
+		<div class="navbar navbar-static-top">
+  			<div class="container">
+    			<div class="navbar-header menu">
+      				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+	        			<span class="sr-only">Toggle navigation</span>
+		        		<span class="icon-bar"></span>
+		       			<span class="icon-bar"></span>
+		       			<span class="icon-bar"></span>
+      				</button>
+      				<a class="navbar-brand" href="#">We need to think of a name</a>
+		    	</div>
+    
+			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+			    	<ul class="nav navbar-nav menu">
+			        	<li>
+			        		<!-- TODO: need to modify link -->
+			        		<a href="#">Match</a>
+			        	</li>
+			        	<li>
+			        		<!-- TODO: need to modify link -->
+			        		<a href="#">Modify Wardrobe</a>
+			        	</li>			        
+			        	<li>
+			        		<!-- TODO: need to modify link -->
+			        		<a href="#">View Wardrobe</a>
+			        	</li>
+			      	</ul>
+			     
+			     	<ul class="nav navbar-nav navbar-right menu">
+			        	<li>
+			        		<!-- TODO: need to modify link -->
+			        		<a href="#">About</a>
+			        	</li> 
+			        </ul>
+
+			    </div>
+			</div>
+		</div>
+<div style="margin:100px;"></div>
+
+		<!-- the carousel -->
+		<div id="mainPageCarousel" class="carousel slide" data-ride="carousel">
+      
+      		<ol class="carousel-indicators">
+        		<li data-target="#mainPageCarousel" data-slide-to="0" class="active"></li>
+        		<li data-target="#mainPageCarousel" data-slide-to="1"></li>
+        		<li data-target="#mainPageCarousel" data-slide-to="2"></li>
+      		</ol>
+
+      		<div class="carousel-inner" role="listbox">
+
+       			<div class="item active">
+       				<!-- TODO: need to change image -->
+          			<img class="first-slide" src="set1.png" alt="First slide">
+        		</div>
+
+		        <div class="item">
+		        	<!-- TODO: need to change image -->
+		          	<img class="second-slide" src="set2.png" alt="Second slide">
+		        </div>
+
+        		<div class="item">
+        			<!-- TODO: need to change image -->
+	          		<img class="third-slide" src="set3.png" alt="Third slide">
+        		</div>
+      		</div>
+	    </div>
+	    
+		<div class="bottom row">
+			<div class="col-lg-4"></div>
+			<div class="col-lg-4" style="text-align:center;">
+				<h1>Some headline.</h1>
+				<p>Some text.</p>
+				<!-- ToDO: need to change link -->
+				<p><a class="btn btn-lg btn-primary" href="#" role="button">Find your outfit</a></p>
+			</div>
+			<div class="col-lg-4"></div>
+		</div>
+		</div>
+
+
+
+		<script>
+			$(document).ready(function() {
+
+				// set some local storage elements to store the "uploaded files"  -> Wardrobe
+				localStorage.setItem("Wardrobe", []);
+
+				// store the outfits
+				localStorage.setItem("Outfits", []);
+
+			});
+		</script>
+
+	</body>
+
+</html>
