@@ -9,8 +9,6 @@
 			}
 
 		</style>
-		
-		<link rel="stylesheet" type="text/css" href="main.css">
 
 		<!-- Jquery -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -18,7 +16,6 @@
 		<!-- Bootstrap -->
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
 
 		<!-- Optional theme -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
@@ -33,9 +30,179 @@
     	This must be loaded before fileinput.min.js -->
 		<script src="./js/plugins/canvas-to-blob.min.js" type="text/javascript"></script>
 		<script src="./js/fileinput.min.js"></script>
-		<script src="Clothes.js"></script>
+
+		<script>
+
+		// adds a new clothing item to wardrobe (loca; storage)
+		function AddClothingItem(name, type, filePath) {
+			var id = localStorage.ImageID;
+			localStorage.ImageID ++;
+
+			var wardrobe = JSON.parse(localStorage.Wardrobe);
+			
+			wardrobe[id] = {
+				name: name,
+				type: type,
+				filePath: filePath
+			};
+
+			localStorage.setItem('Wardrobe', JSON.stringify(wardrobe));
+
+		}
+
+		function DisplayClothingItem(rowID, itemID, wardrobe) {
+
+			var item = wardrobe[itemID];
+			// var filePath = item.filePath.replace("/", "\\");
+
+			var id = "item" + itemID;
+			$("#" + rowID).append( "<div class='col-sm-3 clothing-item'>" +
+										"<div class='thumbnail'>" +
+	                           				"<img src='" + item.filePath + "'>" +
+	                           				"<div class='caption'>" +
+	                           					"<p>" + item.name + "</p>" +
+				                           		"<button  id='" + id + "' class='delete-item btn btn-default'>" +
+				                        			"<span class='glyphicon glyphicon-trash' aria-hidden='true'></span>" +
+	    	                    				"</button>" +    
+	    	                    			"</div>" +
+	    	                    		"</div>" +
+	    	                    	"</div>");
+
+		}
+
+		// populates the thumbnails on page start
+		function PopulateWardrobe() {
+			var wardrobe = JSON.parse(localStorage.Wardrobe);
+			var ids = Object.keys(wardrobe);
+
+			var clothingSetIndex = 0;
+			var setID; 
+
+			for (var i = 0; i < ids.length; i++) {
+
+				if ((i != 0) && (i % 4 == 0)) {
+
+					clothingSetIndex++;
+					setID = "items-set" + clothingSetIndex;
+					$("#wardrobe-inner").append("<div class='item  clothing-set'>" +
+													"<div id='" + setID + "' class='row'>" +
+													"</div>" +
+												"</div>");
+				}
+				else
+				{	
+					setID = "items-set" + clothingSetIndex;
+					if (i == 0) {
+						$("#" + setID).empty();
+					}								
+				}
+
+				DisplayClothingItem(setID, ids[i], wardrobe);
+			}
+		}
+
+		function AddToWardrobe(name, type, filePath) {
+			// TODO: might need to make it more efficient
+			AddClothingItem(name, type, filePath);
+
+			$("#wardrobe-inner").empty();
+			$("#wardrobe-inner").append("<div class='item active clothing-set'>" +
+											"<div id='items-set0' class='row'> </div>" +  
+										"</div>");
+			PopulateWardrobe();
+		}
+
+		function DeleteFromWardrobe(itemID) {
+			// TODO: might need to make it more efficient
+			var wardrobe = JSON.parse(localStorage.Wardrobe);
+			delete wardrobe[itemID];
+			localStorage.setItem('Wardrobe', JSON.stringify(wardrobe));
+
+			$("#wardrobe-inner").empty();
+			$("#wardrobe-inner").append("<div class='item active clothing-set'>" +
+											"<div id='items-set0' class='row'> </div>" +  
+										"</div>");
+			PopulateWardrobe();
+		}	
+
+		
+
+		$(document).ready(function() {
+
+			$('#wardrobe').carousel({
+				interval: 10000
+			});
+
+			$("#itemFile").fileinput({showCaption: false, allowedPreviewMimeTypes: ['image'], showUpload: false });	
+
+			PopulateWardrobe();
+
+			$(".delete-item").click(function(){
+				var id = this.id.replace("item", "");
+				DeleteFromWardrobe(id);
+			});	
 
 
+			// Source: http://stackoverflow.com/questions/19183180/how-to-save-an-image-to-localstorage-and-display-it-on-the-next-page
+			$("#addItem").click(function(){
+
+				// get name
+				var name = $("#itemName").val();
+
+				// get type
+				var type = $("#itemType").val();
+
+				if ((!name) || (!type)) {
+					alert("either name or type field is empty.");
+					return;
+				}
+
+				// get file
+				// check that a file has been uploaded
+				var fileName = $("#itemFile").val();
+				if(!fileName) {
+					alert("please, upload a file to proceed");
+					return;
+				}
+
+				// otherwise, the file has been uploaded
+				var itemImage = document.getElementById("uploadedItem");
+
+				var canvas = document.createElement("canvas");
+				canvas.width = itemImage.width;
+    			canvas.height = itemImage.height;
+
+    			var ctx = canvas.getContext("2d");
+    			ctx.drawImage(itemImage, 0, 0, itemImage.width, itemImage.height);
+
+    			var dataURL = canvas.toDataURL("image/jpg");
+
+    			// dataURL = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+   			
+
+    			AddToWardrobe(name, type, dataURL);
+
+			});
+
+			$("#itemFile").change(function(){
+				if(this.files && this.files[0]) {
+					var reader = new FileReader();
+
+					reader.onload = function(e) {
+						$("#uploaded-images").empty();
+						$("#uploaded-images").append("<img id='uploadedItem' width='250' height='250'>");
+						document.getElementById('uploadedItem').src = e.target.result;
+					};
+
+					reader.readAsDataURL(this.files[0]);
+				}
+			});	
+
+			
+
+		});
+
+		</script>
 
 
 	</head>
@@ -44,41 +211,22 @@
 
 		<!-- the navigation bar -->
 		<!-- TODO: refactor this and the header section into a separate file -->
-<html>
-	<head>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid">
 
-		<!-- Bootstrap -->
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-		
-		<link rel="stylesheet" type="text/css" href="main.css">
-
-
-	</head>
-
-<!-- the navigation bar -->
-		<div class="navbar navbar-static-top">
-  			<div class="container">
-    			<div class="navbar-header menu">
-      				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<div class="navbar-header">
+	  				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 	        			<span class="sr-only">Toggle navigation</span>
 		        		<span class="icon-bar"></span>
 		       			<span class="icon-bar"></span>
 		       			<span class="icon-bar"></span>
-      				</button>
-      				<a class="navbar-brand" href="#">We need to think of a name</a>
+	  				</button>
+	  				<a class="navbar-brand" href="#">We need to think of a name</a>
 		    	</div>
-    
+
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
-			    	<ul class="nav navbar-nav menu">
+			    	<ul class="nav navbar-nav">
 			        	<li>
 			        		<!-- TODO: need to modify link -->
 			        		<a href="#">Match</a>
@@ -93,7 +241,7 @@
 			        	</li>
 			      	</ul>
 			     
-			     	<ul class="nav navbar-nav navbar-right menu">
+			     	<ul class="nav navbar-nav navbar-right">
 			        	<li>
 			        		<!-- TODO: need to modify link -->
 			        		<a href="#">About</a>
@@ -102,14 +250,13 @@
 
 			    </div>
 			</div>
-		</div>
-    <div style="margin:100px;"></div>
-</html>
+		</nav>
+
 		<!-- source: http://www.bootply.com/89193 -->
 		<div class="container">
     		
     		<div class="col-md-12">
-         		<h1>Your wardrobe</h1>
+         		<h1>Wardrobe So far:</h1>
 
         		<div class="well">
 
@@ -118,9 +265,9 @@
                 		<!-- Carousel items -->
                 		<div id="wardrobe-inner" class="carousel-inner">
 
-	                    	<div class="item active">
+	                    	<div class="item active clothing-set">
 
-	                        	<div id="items-set0" class="row clothing-set">
+	                        	<div id="items-set0" class="row">
 	                        		<div class='col-sm-3 clothing-item'>
 	                        			<div class='thumbnail'>
 	                           				<img src='C:\Users\MarinaT\Documents\uoftHacks2016\placeHolder.jpg'>
@@ -169,24 +316,29 @@
 
     				<div class="col-md-6">
 
-	    				<select>
+	    				<select id="itemType">
 						  	<option value="top">Top</option>
 						  	<option value="sweater">Sweater</option>
 						  	<option value="bottom">Bottom</option>
 							<option value="shoes">Shoes</option>
+							<option value="dress">Dress</option>
 							<option value="access">Accessories</option>
 						</select>
 
 						<div class="input-group">
-	  						<input id="itemFile-name" type="text" class="form-control" placeholder="name your item!" aria-describedby="basic-addon2">
+	  						<input id="itemName" type="text" class="form-control" placeholder="name your item!" aria-describedby="basic-addon2">
 	  					</div>
 
-	  					<a type="button" class="btn btn-primary">Add Item</a>
+	  					<button type="button" id="addItem" class="btn btn-primary">Add Item</button>
 
 
 					</div>
 
     			</div>
+
+    			<div id="uploaded-images" class="hidden">
+    			</div>
+
     		</div>
 
 		</div>
