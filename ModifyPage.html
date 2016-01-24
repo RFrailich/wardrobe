@@ -19,24 +19,7 @@
 		<script src="Clothes.js"></script>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-		<script>
-		function readURL(input) {
 
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            $('#blah').attr('src', e.target.result);
-        }
-
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-
-$("#itemFile").change(function(){
-    readURL(this);
-});
-</script>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="main.css">
@@ -161,13 +144,13 @@ $("#itemFile").change(function(){
 						</ul>
 					  </div>
 						<div class="input-group">
-	  						<input id="itemFile-name" type="text" class="form-control" placeholder="name your item!" aria-describedby="basic-addon2">
+	  						<input id="itemName" type="text" class="form-control" placeholder="name your item!" aria-describedby="basic-addon2">
 	  						</br>
 	  						<a type="button" class="btn btn-primary">Add Item</a>
 	  					</div>
 
 					</div>
-
+    			<div id="uploaded-images" class="hidden">
     			</div>
     		</div>
 
