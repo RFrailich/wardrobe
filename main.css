@@ -22,13 +22,13 @@
   top: 50px;
 }
 
-a.btn.btn-lg.btn-primary {
+a.btn.btn-primary {
  background-color: #330000;
  border-color: #330000;
  background-image: linear-gradient(rgb(33, 00, 00) 0px, rgb(66, 00, 00) 100%);
 }
 
-h1, p {
+h1, p, label {
   color: #330000;
 }
 
